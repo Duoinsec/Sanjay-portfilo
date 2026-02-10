@@ -1,16 +1,45 @@
-# React + Vite
+# Sanjay-portfilo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 🚀 Sanjay's AI Portfolio
 
-Currently, two official plugins are available:
+A modern, high-performance portfolio website showcasing AI development projects, skills, and professional experience.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### ✨ Features
 
-## React Compiler
+- **Smooth Animations** - GPU-accelerated animations with 60fps performance
+- **Responsive Design** - Optimized for all devices and screen sizes
+- **Neural Background** - Interactive 3D neural network visualization
+- **Project Showcase** - Live demos of real-world projects
+- **Performance Optimized** - Hardware acceleration and optimized rendering
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 🛠️ Tech Stack
 
-## Expanding the ESLint configuration
+- **Frontend**: React, Vite, Tailwind CSS
+- **Animations**: Framer Motion
+- **3D Graphics**: Three.js, React Three Fiber
+- **Styling**: CSS3 with GPU acceleration
+- **Deployment**: Vercel
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 📦 Projects Featured
+
+1. **NammaSewa** - Career Guidance & Admission Support Portal
+2. **Billing Software** - Invoice & Customer Management System
+3. **Academic Nexus** - Research & Knowledge Sharing Platform
+4. **DuoinsecGroups** - Cybersecurity & Enterprise Solutions
+
+### 🚀 Getting Started
+
+```bash
+# Install dependencies
+npm install
+
+# Run development server
+npm run dev
+
+# Build for production
+npm run build
+```
+
+### 📄 License
+
+© 2026 Sanjay G. All rights reserved.
