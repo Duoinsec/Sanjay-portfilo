@@ -17,6 +17,7 @@ import {
     CheckCircle2
 } from 'lucide-react';
 import DownloadButton from './DownloadButton';
+import newProfileImage from './profile-new.jpg';
 
 const Resume = () => {
     // Shared Animation Variants
@@ -41,16 +42,16 @@ const Resume = () => {
 
     const experience = [
         {
-            role: "Lead AI Developer",
+            role: "AI Developer",
             company: "TechNova Solutions",
-            period: "2023 - Present",
+            period: "2026 - Present",
             description: "Leading the development of generative AI models and large-scale data processing pipelines for enterprise clients.",
             icon: <Rocket size={20} className="text-neon-blue" />
         },
         {
-            role: "Senior Full Stack Engineer",
+            role: "Full stack developer",
             company: "DataStream Systems",
-            period: "2021 - 2023",
+            period: "2026 - Present",
             description: "Architected and implemented high-performance web applications using React and distributed backend services.",
             icon: <Briefcase size={20} className="text-neon-purple" />
         }
@@ -60,7 +61,7 @@ const Resume = () => {
         {
             degree: "B.TECH (AI&DS)",
             institution: "Sengunthar Engineering College, Tiruchengode",
-            period: "2021 - 2025",
+            period: "2023 - 2027",
             description: "Specializing in Artificial Intelligence and Data Science with a focus on neural networks and modern computing."
         }
     ];
@@ -82,12 +83,12 @@ const Resume = () => {
         {
             name: "Advanced Machine Learning Specialization",
             provider: "Coursera / Stanford",
-            year: "2024"
+            year: "2025"
         },
         {
             name: "Full Stack Development Professional",
             provider: "Meta",
-            year: "2023"
+            year: "2025"
         }
     ];
 
@@ -176,8 +177,15 @@ const Resume = () => {
                             <div className="absolute top-0 right-0 w-32 h-32 bg-neon-blue/10 blur-3xl -mr-10 -mt-10 group-hover:bg-neon-blue/20 transition-all duration-700"></div>
 
                             <div className="relative z-10">
-                                <div className="w-20 h-20 bg-gradient-to-br from-neon-blue to-neon-purple rounded-2xl flex items-center justify-center mb-8 shadow-lg transform group-hover:rotate-6 transition-transform">
-                                    <User size={40} className="text-white" />
+                                <div className="w-24 h-24 mb-8 relative group/img">
+                                    <div className="absolute inset-0 bg-gradient-to-br from-neon-blue to-neon-purple rounded-2xl blur-lg opacity-50 group-hover/img:opacity-100 transition-opacity duration-500"></div>
+                                    <div className="relative w-full h-full rounded-2xl overflow-hidden border-2 border-white/20 shadow-xl transform group-hover:rotate-3 transition-transform duration-500">
+                                        <img
+                                            src={newProfileImage}
+                                            alt="Sanjay G"
+                                            className="w-full h-full object-cover"
+                                        />
+                                    </div>
                                 </div>
                                 <h2 className="text-3xl font-bold text-white mb-2">SANJAY G</h2>
                                 <p className="text-neon-blue font-mono text-sm uppercase tracking-widest mb-6">AI Developer & Designer</p>
@@ -265,8 +273,8 @@ const Resume = () => {
                             </div>
                         </motion.div>
 
-                        {/* EDUCATION & PROJECTS SECTION GRID */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        {/* EDUCATION SECTION */}
+                        <div className="grid grid-cols-1 gap-8">
 
                             {/* EDUCATION */}
                             <motion.div
@@ -292,44 +300,6 @@ const Resume = () => {
                                         <p className="text-gray-400 text-sm leading-relaxed">{item.description}</p>
                                     </motion.div>
                                 ))}
-                            </motion.div>
-
-                            {/* PROJECTS */}
-                            <motion.div
-                                variants={containerVariants}
-                                initial="hidden"
-                                whileInView="visible"
-                                viewport={{ once: true }}
-                                className="space-y-6"
-                            >
-                                <div className="flex items-center gap-4 mb-2">
-                                    <div className="w-10 h-10 glass rounded-xl flex items-center justify-center text-neon-blue">
-                                        <Rocket size={20} />
-                                    </div>
-                                    <h3 className="text-xl font-bold text-white uppercase tracking-tight">Focus Projects</h3>
-                                </div>
-                                <div className="space-y-4">
-                                    {projects_summary.map((proj, idx) => (
-                                        <motion.div key={idx} variants={itemVariants} className="glass p-6 rounded-3xl border border-white/5 group/proj hover:bg-white/[0.02] transition-all flex flex-col gap-4">
-                                            <div className="flex justify-between items-start">
-                                                <div>
-                                                    <h4 className="text-white font-bold mb-1">{proj.name}</h4>
-                                                    <p className="text-xs text-gray-500 line-clamp-2">{proj.description}</p>
-                                                </div>
-                                            </div>
-                                            <div className="flex gap-2">
-                                                <a href={proj.link} className="flex-1 flex items-center justify-center gap-2 py-2 bg-neon-blue/10 hover:bg-neon-blue/20 border border-neon-blue/30 rounded-xl text-[10px] font-bold text-neon-blue transition-all">
-                                                    <Globe size={12} />
-                                                    Demo
-                                                </a>
-                                                <a href="#" className="flex-1 flex items-center justify-center gap-2 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-[10px] font-bold text-white transition-all">
-                                                    <Github size={12} />
-                                                    Code
-                                                </a>
-                                            </div>
-                                        </motion.div>
-                                    ))}
-                                </div>
                             </motion.div>
 
                         </div>

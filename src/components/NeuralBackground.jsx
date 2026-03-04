@@ -28,11 +28,9 @@ const NeuralBackground = () => {
         return temp;
     }, [count, viewport.width, viewport.height]);
 
-    // Points geometry data
-    const particlesPosition = useMemo(() => {
-        const positions = new Float32Array(count * 3);
-        return positions;
-    }, [count]);
+    // Pre-allocate buffers for rendering
+    const pointsBuffer = useRef(new Float32Array(count * 3));
+    const linePositionsBuffer = useRef(new Float32Array(count * count * 6));
 
     useFrame((state) => {
         const { pointer } = state;
@@ -40,46 +38,60 @@ const NeuralBackground = () => {
         const mouseY = (pointer.y * viewport.height) / 2;
 
         const positions = pointsRef.current.geometry.attributes.position.array;
-        const linePositions = [];
+        let lineIdx = 0;
+        const linePos = linePositionsBuffer.current;
 
-        nodes.forEach((node, i) => {
+        for (let i = 0; i < count; i++) {
+            const node = nodes[i];
+            
             // Move nodes
             node.position.add(node.velocity);
 
-            // Bounce off boundaries
+            // Bounce off boundaries with margin
             if (Math.abs(node.position.x) > viewport.width) node.velocity.x *= -1;
             if (Math.abs(node.position.y) > viewport.height) node.velocity.y *= -1;
 
-            // Mouse attraction (subtle)
+            // Mouse attraction (optimized with distance squared)
             const dx = mouseX - node.position.x;
             const dy = mouseY - node.position.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < 5) {
-                node.position.x += dx * 0.01;
-                node.position.y += dy * 0.01;
+            const distSq = dx * dx + dy * dy;
+            if (distSq < 25) { // 5 unit radius
+                const dist = Math.sqrt(distSq);
+                node.position.x += (dx / dist) * 0.01;
+                node.position.y += (dy / dist) * 0.01;
             }
 
             positions[i * 3] = node.position.x;
             positions[i * 3 + 1] = node.position.y;
             positions[i * 3 + 2] = node.position.z;
 
-            // Connect nearby nodes
-            for (let j = i + 1; j < nodes.length; j++) {
-                const distToOther = node.position.distanceTo(nodes[j].position);
-                if (distToOther < 4) {
-                    linePositions.push(
-                        node.position.x, node.position.y, node.position.z,
-                        nodes[j].position.x, nodes[j].position.y, nodes[j].position.z
-                    );
+            // Connect nearby nodes (optimized double loop)
+            for (let j = i + 1; j < count; j++) {
+                const other = nodes[j];
+                const dxO = node.position.x - other.position.x;
+                const dyO = node.position.y - other.position.y;
+                const dzO = node.position.z - other.position.z;
+                const distToOtherSq = dxO * dxO + dyO * dyO + dzO * dzO;
+                
+                if (distToOtherSq < 16) { // 4 unit distance
+                    linePos[lineIdx++] = node.position.x;
+                    linePos[lineIdx++] = node.position.y;
+                    linePos[lineIdx++] = node.position.z;
+                    linePos[lineIdx++] = other.position.x;
+                    linePos[lineIdx++] = other.position.y;
+                    linePos[lineIdx++] = other.position.z;
                 }
             }
-        });
+        }
 
         pointsRef.current.geometry.attributes.position.needsUpdate = true;
 
         if (linesRef.current) {
-            const lineGeom = linesRef.current.geometry;
-            lineGeom.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
+            const lineAttr = linesRef.current.geometry.attributes.position;
+            lineAttr.array.set(linePos.subarray(0, lineIdx));
+            lineAttr.count = lineIdx / 3;
+            lineAttr.needsUpdate = true;
+            linesRef.current.geometry.computeBoundingSphere();
         }
     });
 
@@ -91,7 +103,7 @@ const NeuralBackground = () => {
                     <bufferAttribute
                         attach="attributes-position"
                         count={count}
-                        array={particlesPosition}
+                        array={pointsBuffer.current}
                         itemSize={3}
                     />
                 </bufferGeometry>
@@ -106,7 +118,14 @@ const NeuralBackground = () => {
 
             {/* Connections */}
             <lineSegments ref={linesRef}>
-                <bufferGeometry />
+                <bufferGeometry>
+                    <bufferAttribute
+                        attach="attributes-position"
+                        count={0}
+                        array={linePositionsBuffer.current}
+                        itemSize={3}
+                    />
+                </bufferGeometry>
                 <lineBasicMaterial
                     color="#bc13fe"
                     transparent

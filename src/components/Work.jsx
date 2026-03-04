@@ -1,5 +1,7 @@
+import { useState, useEffect } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Github, Globe, Code2, Sparkles } from 'lucide-react';
+import { supabase } from '../supabaseClient';
 import nammaSewaImg from './nammasewa.png';
 
 const ProjectCard = ({ project, index }) => {
@@ -57,6 +59,8 @@ const ProjectCard = ({ project, index }) => {
                                 whileTap={{ scale: 0.95 }}
                                 href={project.links.demo}
                                 className="flex-1 flex items-center justify-center gap-2 px-4 py-3.5 bg-neon-blue text-dark rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,242,255,0.3)] hover:shadow-[0_0_35px_rgba(0,242,255,0.5)]"
+                                target="_blank"
+                                rel="noopener noreferrer"
                             >
                                 <Globe size={16} />
                                 Demo
@@ -66,6 +70,8 @@ const ProjectCard = ({ project, index }) => {
                                 whileTap={{ scale: 0.95 }}
                                 href={project.links.github}
                                 className="flex-1 flex items-center justify-center gap-2 px-4 py-3.5 bg-white/5 hover:bg-white/10 border border-white/20 rounded-xl text-xs font-black uppercase tracking-wider text-white transition-all shadow-xl"
+                                target="_blank"
+                                rel="noopener noreferrer"
                             >
                                 <Code2 size={16} />
                                 Code
@@ -79,7 +85,32 @@ const ProjectCard = ({ project, index }) => {
 };
 
 const Work = () => {
-    const projects = [
+    const [supabaseProjects, setSupabaseProjects] = useState([]);
+    
+    useEffect(() => {
+        const fetchProjects = async () => {
+            const { data, error } = await supabase
+                .from('projects')
+                .select('*')
+                .order('display_order', { ascending: true });
+            
+            if (data && !error) {
+                // Map Supabase data to the format used in the card
+                const formatted = data.map(p => ({
+                    title: p.title,
+                    description: p.description,
+                    image: p.image_url,
+                    tags: p.tags || [],
+                    links: { demo: p.demo_url, github: p.github_url }
+                }));
+                setSupabaseProjects(formatted);
+            }
+        };
+
+        fetchProjects();
+    }, []);
+
+    const staticProjects = [
         {
             title: 'NammaSewa',
             description: 'Career Guidance & Admission Support Portal - An online platform that provides guidance and support for students seeking admission in medical and engineering courses. Offers information about courses, admission processes, and counseling services to help students make informed academic decisions.',
@@ -116,6 +147,11 @@ const Work = () => {
             links: { demo: '#', github: '#' }
         }
     ];
+
+    // Combine static and dynamic projects, removing duplicates based on title if necessary
+    const projects = supabaseProjects.length > 0 
+        ? [...supabaseProjects, ...staticProjects.filter(sp => !supabaseProjects.find(dp => dp.title === sp.title))]
+        : staticProjects;
 
     return (
         <section id="work" className="py-24 bg-dark relative overflow-hidden">

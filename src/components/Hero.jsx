@@ -24,9 +24,9 @@ const Hero = () => {
     ];
 
     return (
-        <section id="home" className="min-h-screen flex items-center justify-center pt-28 pb-20 relative overflow-hidden bg-dark">
+        <section id="home" className="min-h-screen flex items-center justify-center pt-28 pb-20 relative overflow-hidden bg-transparent">
             {/* AI Visual Background Elements */}
-            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <div className="absolute inset-0 pointer-events-auto overflow-hidden">
                 <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-neon-blue/10 rounded-full blur-[140px] animate-pulse-slow"></div>
                 <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-neon-purple/10 rounded-full blur-[120px] animate-pulse-slow"></div>
 

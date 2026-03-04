@@ -5,7 +5,7 @@ import PhotoCard from './PhotoCard';
 const About = () => {
 
     return (
-        <section id="about" className="py-24 bg-dark relative overflow-hidden min-h-[800px] flex items-center">
+        <section id="about" className="py-24 bg-transparent relative overflow-hidden min-h-[800px] flex items-center">
 
 
             {/* Ambient Decorations */}

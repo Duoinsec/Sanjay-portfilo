@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import profileImage from './profile.jpg';
+import profileImage from './profile-new.jpg';
 
 const PhotoCard = () => {
     return (

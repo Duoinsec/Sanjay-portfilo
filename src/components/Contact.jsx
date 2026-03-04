@@ -1,6 +1,7 @@
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion';
 import { Mail, MapPin, Phone, Github, Linkedin, Instagram, Rocket, Sparkles, CheckCircle, Loader2 } from 'lucide-react';
 import { useState, useRef } from 'react';
+import { supabase } from '../supabaseClient';
 
 const Contact = () => {
     const [isSending, setIsSending] = useState(false);
@@ -39,8 +40,9 @@ const Contact = () => {
         y.set(0);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsSending(true);
 
         // Get form data
         const formData = new FormData(e.target);
@@ -49,20 +51,30 @@ const Contact = () => {
         const contact = formData.get('contact');
         const description = formData.get('description');
 
-        // Create email content
-        const subject = `Portfolio Contact from ${name}`;
-        const body = `Name: ${name}%0D%0AEmail: ${email}%0D%0AContact: ${contact}%0D%0A%0D%0AMessage:%0D%0A${description}`;
+        try {
+            // 1. Try sending to Supabase
+            const { error } = await supabase.from('contacts').insert([
+                { name, email, contact, description }
+            ]);
 
-        // Open default email client with pre-filled data
-        window.location.href = `mailto:g.sanjayofficial4@gmail.com?subject=${encodeURIComponent(subject)}&body=${body}`;
+            if (error) throw error;
 
-        // Show success message
-        setIsSending(true);
-        setTimeout(() => {
-            setIsSending(false);
             setIsSent(true);
+            e.target.reset();
+        } catch (error) {
+            console.error('Error sending message to Supabase:', error);
+            
+            // 2. Fallback to Mailto if Supabase fails (or is not configured)
+            const subject = `Portfolio Contact from ${name}`;
+            const body = `Name: ${name}%0D%0AEmail: ${email}%0D%0AContact: ${contact}%0D%0A%0D%0AMessage:%0D%0A${description}`;
+            window.location.href = `mailto:g.sanjayofficial4@gmail.com?subject=${encodeURIComponent(subject)}&body=${body}`;
+            
+            // Still show "Sent" as we triggered the fallback
+            setIsSent(true);
+        } finally {
+            setIsSending(false);
             setTimeout(() => setIsSent(false), 5000);
-        }, 1000);
+        }
     };
 
     const contactInfo = [

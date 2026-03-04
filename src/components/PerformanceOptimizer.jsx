@@ -47,6 +47,22 @@ const PerformanceOptimizer = () => {
         const optimizeCanvas = () => {
             const canvases = document.querySelectorAll('canvas');
             canvases.forEach(canvas => {
+                // EXTREMELY IMPORTANT: Avoid touching Three.js / WebGL canvases
+                // These attributes are common markers for Three.js/Fiber
+                const isManagedByThree = 
+                    canvas.hasAttribute('data-engine') || 
+                    canvas.getAttribute('data-testid') === 'rf-canvas' ||
+                    canvas.classList.contains('three-canvas') ||
+                    canvas.parentElement?.classList.contains('three-container');
+
+                if (isManagedByThree) return;
+                
+                // If it looks like a Three.js canvas, skip it
+                if (canvas.style.position === 'absolute' && canvas.style.pointerEvents === 'none') {
+                    // background canvases often have these
+                    return;
+                }
+
                 const ctx = canvas.getContext('2d', {
                     alpha: false,
                     desynchronized: true,
@@ -74,7 +90,9 @@ const PerformanceOptimizer = () => {
         if (window.screen && window.screen.orientation) {
             try {
                 // Try to unlock higher refresh rates on supported devices
-                window.screen.orientation.lock?.('any');
+                window.screen.orientation.lock?.('any').catch(() => {
+                    // Silently fail if lock is canceled or not supported
+                });
             } catch (e) {
                 // Silently fail if not supported
             }

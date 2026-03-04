@@ -100,7 +100,7 @@ const Navbar = () => {
                                 exit={{ opacity: 0, height: 0 }}
                                 className="md:hidden glass-nav overflow-hidden mt-4"
                             >
-                                <div className="px-4 pt-2 pb-6 space-y-2">
+                                <div className="px-4 pt-6 pb-6 space-y-2">
                                     {navLinks.map((link) => (
                                         <a
                                             key={link.name}
