@@ -2,19 +2,33 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Github, Linkedin, Instagram, Twitter, ExternalLink, Bot, Sparkles } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import FadeContent from './FadeContent';
-import SplashCursor from './SplashCursor';
-
 
 const Hero = () => {
-    const roles = ["AI Developer", "UI/UX Designer", "App Creator", "Digital Innovator"];
+    const roles = ["AI Developer", "UI/UX Designer", "Full Stack Developer", "Digital Innovator"];
     const [roleIndex, setRoleIndex] = useState(0);
+    const [text, setText] = useState('');
+    const [isDeleting, setIsDeleting] = useState(false);
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            setRoleIndex((prev) => (prev + 1) % roles.length);
-        }, 3000);
-        return () => clearInterval(interval);
-    }, []);
+        const timeout = setTimeout(() => {
+            const currentRole = roles[roleIndex];
+            
+            if (isDeleting) {
+                setText(currentRole.substring(0, text.length - 1));
+            } else {
+                setText(currentRole.substring(0, text.length + 1));
+            }
+
+            if (!isDeleting && text === currentRole) {
+                setTimeout(() => setIsDeleting(true), 1500);
+            } else if (isDeleting && text === '') {
+                setIsDeleting(false);
+                setRoleIndex((prev) => (prev + 1) % roles.length);
+            }
+        }, isDeleting ? 50 : 100);
+
+        return () => clearTimeout(timeout);
+    }, [text, isDeleting, roleIndex]);
 
     const socialLinks = [
         { icon: <Instagram size={20} />, href: "https://instagram.com", label: "Instagram" },
@@ -33,8 +47,7 @@ const Hero = () => {
                 {/* Cyberpunk Grid Background */}
                 <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:100px_100px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
 
-                {/* Restricted Splash Cursor */}
-                <SplashCursor />
+                {/* Removed Splash Cursor */}
             </div>
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -72,18 +85,10 @@ const Hero = () => {
 
                     {/* Roles Typing Animation */}
                     <div className="h-10 md:h-14 flex items-center mb-8">
-                        <AnimatePresence mode="wait">
-                            <motion.h2
-                                key={roles[roleIndex]}
-                                initial={{ opacity: 0, x: 20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: -20 }}
-                                transition={{ duration: 0.4, ease: "easeOut" }}
-                                className="text-xl md:text-4xl lg:text-5xl font-mono font-bold text-gradient uppercase tracking-[0.15em]"
-                            >
-                                {roles[roleIndex]}
-                            </motion.h2>
-                        </AnimatePresence>
+                        <h2 className="text-xl md:text-4xl lg:text-5xl font-mono font-bold text-gradient uppercase tracking-[0.15em] flex items-center">
+                            {text}
+                            <span className="inline-block w-[3px] h-6 md:h-10 bg-neon-blue ml-2 animate-pulse"></span>
+                        </h2>
                     </div>
 
                     {/* Tagline */}

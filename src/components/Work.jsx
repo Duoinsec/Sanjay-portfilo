@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { Github, Globe, Code2, Sparkles } from 'lucide-react';
+import { Github, Globe, Sparkles, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
-import nammaSewaImg from './nammasewa.png';
+import { staticProjects } from '../data/projectsData';
 
 const ProjectCard = ({ project, index }) => {
     const shouldReduceMotion = useReducedMotion();
@@ -13,70 +14,71 @@ const ProjectCard = ({ project, index }) => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px", amount: 0.3 }}
             transition={{ duration: shouldReduceMotion ? 0.01 : 0.5, delay: shouldReduceMotion ? 0 : index * 0.08, ease: [0.25, 0.1, 0.25, 1] }}
-            className="group relative z-10"
+            className="group relative h-full flex flex-col"
         >
-            {/* Ambient Card Glow */}
-            <div className="absolute inset-0 bg-gradient-to-br from-neon-blue/10 to-neon-purple/10 opacity-0 group-hover:opacity-100 blur-2xl transition-opacity duration-500 rounded-[2rem]"></div>
+            {/* Background Glow */}
+            <div className="absolute inset-0 bg-gradient-to-b from-neon-blue/20 to-neon-purple/20 opacity-0 group-hover:opacity-100 blur-3xl transition-opacity duration-700 rounded-3xl -z-10"></div>
 
-            <div className="relative h-full glass border border-white/10 rounded-[2rem] transition-all duration-500 group-hover:border-white/20 group-hover:translate-y-[-8px] group-hover:shadow-[0_20px_60px_rgba(0,0,0,0.5)] bg-slate-900/60 flex flex-col">
-                {/* Project Image */}
-                <div className="relative aspect-video overflow-hidden">
+            {/* Main Card */}
+            <div className="flex flex-col h-full bg-[#0a0a0f]/80 backdrop-blur-xl border border-white/10 rounded-3xl p-4 transition-all duration-500 group-hover:border-white/20 group-hover:-translate-y-2 group-hover:bg-[#0f0f15]/90 shadow-2xl">
+                
+                {/* Inset Image */}
+                <div className="relative aspect-video rounded-2xl overflow-hidden mb-6">
                     <img
                         src={project.image}
                         alt={project.title}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-dark/80 via-dark/20 to-transparent"></div>
+                    <div className="absolute inset-0 bg-dark/20 group-hover:bg-transparent transition-colors duration-500"></div>
+                    
+                    {/* Floating Tech Badges (First 2 tags over image) */}
+                    <div className="absolute top-3 left-3 flex gap-2">
+                        {project.tags.slice(0, 2).map((tag, i) => (
+                            <span key={i} className="px-2.5 py-1 text-[10px] font-bold tracking-widest uppercase bg-black/60 backdrop-blur-md text-white border border-white/10 rounded-lg">
+                                {tag}
+                            </span>
+                        ))}
+                    </div>
                 </div>
 
                 {/* Content */}
-                <div className="p-8 flex flex-col h-full">
-                    <div className="flex justify-between items-start mb-4">
-                        <h3 className="text-2xl font-bold text-white tracking-tight group-hover:text-neon-blue transition-colors">
-                            {project.title}
-                        </h3>
-                    </div>
-
-                    <p className="text-gray-400 text-sm leading-relaxed mb-8 line-clamp-3">
+                <div className="flex flex-col flex-grow px-2">
+                    <h3 className="text-2xl font-black text-white mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-neon-blue group-hover:to-neon-purple transition-all duration-300">
+                        {project.title}
+                    </h3>
+                    
+                    <p className="text-gray-400 text-sm leading-relaxed mb-6 line-clamp-3 flex-grow">
                         {project.description}
                     </p>
 
-                    <div className="mt-auto space-y-6">
-                        {/* Tech Stack */}
-                        <div className="flex flex-wrap gap-2">
-                            {project.tags.map((tag, i) => (
-                                <div key={i} className="flex items-center gap-1.5 px-3 py-1 glass rounded-lg border border-white/5 text-[10px] font-mono text-gray-300">
-                                    <Sparkles size={8} className="text-neon-blue opacity-50" />
-                                    {tag}
-                                </div>
-                            ))}
-                        </div>
+                    {/* All Tags (Below Description) */}
+                    <div className="flex flex-wrap gap-2 mb-8">
+                        {project.tags.map((tag, i) => (
+                            <div key={i} className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 rounded-lg border border-white/5 text-xs font-mono text-gray-300 group-hover:border-white/10 transition-colors">
+                                <Sparkles size={10} className="text-neon-blue opacity-70" />
+                                {tag}
+                            </div>
+                        ))}
+                    </div>
 
-                        {/* Action Buttons */}
-                        <div className="flex gap-4 pt-6 mt-4 border-t border-white/10">
-                            <motion.a
-                                whileHover={{ scale: 1.05, y: -2 }}
-                                whileTap={{ scale: 0.95 }}
-                                href={project.links.demo}
-                                className="flex-1 flex items-center justify-center gap-2 px-4 py-3.5 bg-neon-blue text-dark rounded-xl text-xs font-black uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,242,255,0.3)] hover:shadow-[0_0_35px_rgba(0,242,255,0.5)]"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                <Globe size={16} />
-                                Demo
-                            </motion.a>
-                            <motion.a
-                                whileHover={{ scale: 1.05, y: -2 }}
-                                whileTap={{ scale: 0.95 }}
-                                href={project.links.github}
-                                className="flex-1 flex items-center justify-center gap-2 px-4 py-3.5 bg-white/5 hover:bg-white/10 border border-white/20 rounded-xl text-xs font-black uppercase tracking-wider text-white transition-all shadow-xl"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                <Code2 size={16} />
-                                Code
-                            </motion.a>
-                        </div>
+                    {/* Action Buttons */}
+                    <div className="flex items-center gap-3 mt-auto pt-4 border-t border-white/10">
+                        <a
+                            href={project.links.demo}
+                            className="flex-1 flex items-center justify-center gap-2 py-3 bg-white text-dark rounded-xl text-sm font-bold transition-all hover:bg-neon-blue hover:shadow-[0_0_20px_rgba(0,242,255,0.4)]"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <Globe size={16} />
+                            View Site
+                        </a>
+                        <Link
+                            to={`/project/${project.id}`}
+                            className="flex-1 flex items-center justify-center gap-2 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-white text-sm font-bold transition-all hover:border-white/30 hover:text-neon-purple"
+                        >
+                            Details
+                            <ArrowRight size={16} />
+                        </Link>
                     </div>
                 </div>
             </div>
@@ -97,6 +99,7 @@ const Work = () => {
             if (data && !error) {
                 // Map Supabase data to the format used in the card
                 const formatted = data.map(p => ({
+                    id: p.id,
                     title: p.title,
                     description: p.description,
                     image: p.image_url,
@@ -110,48 +113,15 @@ const Work = () => {
         fetchProjects();
     }, []);
 
-    const staticProjects = [
-        {
-            title: 'NammaSewa',
-            description: 'Career Guidance & Admission Support Portal - An online platform that provides guidance and support for students seeking admission in medical and engineering courses. Offers information about courses, admission processes, and counseling services to help students make informed academic decisions.',
-            image: nammaSewaImg,
-            tags: ['React', 'Node.js', 'Education'],
-            links: { demo: 'https://nammasewa.com/', github: '#' }
-        },
-        {
-            title: 'Billing Software',
-            description: 'A web-based billing software developed to generate invoices, manage customers, and store billing records efficiently. The system automates billing processes and improves accuracy and productivity.',
-            image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=800&q=80',
-            tags: ['React', 'Node.js', 'MySQL', 'Bootstrap'],
-            links: { demo: 'https://vkinfotech-billing-du1k.vercel.app/billing', github: '#' }
-        },
-        {
-            title: 'Academic Nexus',
-            description: 'Research & Knowledge Sharing Platform - A web-based platform designed to share academic research and knowledge resources. It helps users access educational content and information through a structured digital interface.',
-            image: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=800&q=80',
-            tags: ['React', 'Next.js', 'Tailwind CSS', 'Vercel'],
-            links: { demo: 'https://academic-nexus-delta.vercel.app', github: '#' }
-        },
-        {
-            title: 'DuoinsecGroups',
-            description: 'Cybersecurity & Enterprise Solutions Platform - A professional website designed to showcase security services, training programs, and technical solutions. Highlights offerings such as security consulting, penetration testing, and cybersecurity training for businesses and learners.',
-            image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80',
-            tags: ['React', 'Node.js', 'Tailwind CSS', 'Vercel'],
-            links: { demo: 'https://duoinsecgroups.com/', github: '#' }
-        },
-        {
-            title: 'Holographic UI System',
-            description: 'A comprehensive design system and component library focused on delivering cinematic user interfaces with real-time WebGL effects.',
-            image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80',
-            tags: ['WebGL', 'GLSL', 'TypeScript'],
-            links: { demo: '#', github: '#' }
-        }
-    ];
+    // Using staticProjects imported from data file
 
     // Combine static and dynamic projects, removing duplicates based on title if necessary
+    const deletedStatic = JSON.parse(localStorage.getItem('deletedStaticProjects') || '[]');
+    const visibleStatic = staticProjects.filter(sp => !deletedStatic.includes(sp.id));
+    
     const projects = supabaseProjects.length > 0 
-        ? [...supabaseProjects, ...staticProjects.filter(sp => !supabaseProjects.find(dp => dp.title === sp.title))]
-        : staticProjects;
+        ? [...supabaseProjects, ...visibleStatic.filter(sp => !supabaseProjects.find(dp => dp.title === sp.title))]
+        : visibleStatic;
 
     return (
         <section id="work" className="py-24 bg-dark relative overflow-hidden">

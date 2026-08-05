@@ -16,11 +16,13 @@ const Navbar = () => {
     }, []);
 
     const navLinks = [
-        { name: 'Home', href: '#home' },
-        { name: 'About', href: '#about' },
-        { name: 'Projects', href: '#work' },
-        { name: 'Resume', href: '#resume' },
-        { name: 'Contact', href: '#contact' },
+        { name: 'Home', href: '/#home' },
+        { name: 'About', href: '/#about' },
+        { name: 'Skills', href: '/#skills' },
+        { name: 'Projects', href: '/#work' },
+        { name: 'Achievements', href: '/achievements' },
+        { name: 'Resume', href: '/#resume' },
+        { name: 'Contact', href: '/#contact' },
     ];
 
     return (
@@ -41,7 +43,7 @@ const Navbar = () => {
                                 animate={{ opacity: 1, x: 0 }}
                                 className="flex-shrink-0"
                             >
-                                <a href="#home" className="text-2xl font-bold text-white tracking-widest font-mono group">
+                                <a href="/#home" className="text-2xl font-bold text-white tracking-widest font-mono group">
                                     SANJAY<span className="text-neon-blue group-hover:animate-pulse">.</span>G
                                 </a>
                             </motion.div>
@@ -72,7 +74,7 @@ const Navbar = () => {
                                 className="hidden md:block"
                             >
                                 <a
-                                    href="#contact"
+                                    href="/#contact"
                                     className="px-6 py-2 bg-gradient-neon text-white text-sm font-bold rounded-full hover:shadow-[0_0_20px_rgba(0,242,255,0.4)] transition-all duration-300 transform hover:scale-105 inline-block"
                                 >
                                     Hire Me
@@ -113,7 +115,7 @@ const Navbar = () => {
                                     ))}
                                     <div className="pt-4">
                                         <a
-                                            href="#contact"
+                                            href="/#contact"
                                             className="w-full block text-center px-6 py-4 bg-gradient-neon text-white font-bold rounded-xl active:scale-95 transition-transform"
                                             onClick={() => setIsOpen(false)}
                                         >

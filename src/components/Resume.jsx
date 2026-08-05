@@ -111,10 +111,10 @@ const Resume = () => {
     ];
 
     const handleDownload = () => {
-        // Download the resume certificate
+        // Download the resume PDF
         const link = document.createElement('a');
-        link.href = '/resume.png';
-        link.download = 'Sanjay_G_Certificate.png';
+        link.href = '/sanjay-resume.pdf';
+        link.download = 'Sanjay_G_Resume.pdf';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -122,7 +122,7 @@ const Resume = () => {
 
     const handleViewResume = () => {
         // Open resume in new tab for viewing
-        window.open('/resume.png', '_blank');
+        window.open('/sanjay-resume.pdf', '_blank');
     };
 
     return (

@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Github, Linkedin, Twitter, Instagram, Heart } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
     return (
@@ -13,7 +14,9 @@ const Footer = () => {
                             viewport={{ once: true }}
                             className="text-2xl font-bold text-white tracking-widest font-mono mb-2"
                         >
-                            SANJAY<span className="text-neon-blue">.</span>G
+                            <Link to="/login" className="hover:text-neon-blue transition-colors duration-300 cursor-pointer">
+                                SANJAY<span className="text-neon-blue">.</span>G
+                            </Link>
                         </motion.div>
                         <p className="text-gray-500 text-sm max-w-xs">
                             © {new Date().getFullYear()} Building the future of digital experiences with AI.
